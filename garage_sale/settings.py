@@ -40,8 +40,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'customers',
-    'inventory'
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'users',
+    'auctions',
+
 ]
 
 MIDDLEWARE = [
@@ -56,23 +61,28 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'garage_sale.urls'
 
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [os.path.join(BASE_DIR, 'garage_sale', 'templates'),
-                os.path.join(BASE_DIR, 'customers', 'templates'),
-                os.path.join(BASE_DIR, 'inventory', 'templates'),],
+                os.path.join(BASE_DIR, 'garage_sale','templates', 'allauth'),
+                os.path.join(BASE_DIR, 'users', 'templates'),
+                os.path.join(BASE_DIR, 'auctions', 'templates'),
+                ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
+                'django.template.context_processors.media',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
         },
     },
 ]
+
 
 WSGI_APPLICATION = 'garage_sale.wsgi.application'
 
@@ -120,8 +130,32 @@ USE_L10N = True
 
 USE_TZ = True
 
+AUTHENTICATION_BACKENDS = (
+    "django.contrib.auth.backends.ModelBackend",
+    "allauth.account.auth_backends.AuthenticationBackend",
+)
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+
+SITE_ID = 1
+ACCOUNT_SIGNUP_FORM_CLASS = 'users.forms.SignupForm'
+ACCOUNT_AUTHENTICATION_METHOD = 'username'
+ACCOUNT_CONFIRM_EMAIL_ON_GET = True
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_EMAIL_VERIFICATION = 'None'
+LOGIN_REDIRECT_URL = "/"
+
+from django.contrib.messages import constants as message_constants
+
+MESSAGE_TAGS = {
+    message_constants.SUCCESS: 'alert-success',
+    message_constants.ERROR: 'alert-danger',
+}
+# do not put anything under this line
+try:
+    from local_settings import *
+except ImportError as exp:
+    pass

@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+  {% block content %}
+  <div class="bg-faded p-4 my-4">
+    <div class="text-center">
+  <form method="post" action="{% url 'auction_create' %}">
+    {% csrf_token %}
+      {{ form.as_p }}
+
+  <input class="btn btn-default btn-primary" type="submit" value="Done">
+</form>
+</div>
+</div>
+{% endblock %}
