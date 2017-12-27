@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Business Casual </title>
+    <title>Haray Auction </title>
 
     <!-- Bootstrap core CSS -->
     <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
@@ -19,7 +19,9 @@
     <link href="https://fonts.googleapis.com/css?family=Josefin+Slab:100,300,400,600,700,100italic,300italic,400italic,600italic,700italic" rel="stylesheet" type="text/css">
 
     <!-- Custom styles for this template -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
     <link href="{% static 'css/business-casual.css' %}" rel=" stylesheet">
+    {% block media %} {% endblock %}
   </head>
 
   <body>
@@ -42,17 +44,26 @@
               </a>
             </li>
             <li class="nav-item px-lg-4">
-              <a class="nav-link text-uppercase text-expanded" href="about.html">About</a>
+              <a class="nav-link text-uppercase text-expanded" href="{% url 'view_auctions_list' %}">Auctions</a>
             </li>
+            {% if user.user.seller %}
+            <li class="nav-item px-lg-4"><a class="nav-link text-uppercase text-expanded" href="#"> My Auctions </a></li>
+            {% endif %}
+
+            {% if user.is_authenticated %}
+            <li class="nav-item px-lg-4"><a class="nav-link text-uppercase text-expanded" href="#"> Profile </a></li>
+
             <li class="nav-item px-lg-4">
-              <a class="nav-link text-uppercase text-expanded" href="blog.html">Auctions</a>
+              <a class="nav-link text-uppercase text-expanded" href="{% url 'account_logout' %}"> Sign Out </a>
             </li>
-            <li class="nav-item px-lg-4">
-              <a class="nav-link text-uppercase text-expanded" href="contact.html">Settings</a>
-            </li>
-            <li class="nav-item px-lg-4">
-              <a class="nav-link text-uppercase text-expanded" href="contact.html">Login</a>
-            </li>
+
+
+            {% else %}
+            <li class="nav-item px-lg-4"><a  class="nav-link text-uppercase text-expanded" href="{% url 'account_login' %}"> Sign In </a></li>
+            <li class="nav-item px-lg-4"><a class="nav-link text-uppercase text-expanded" href="{% url 'account_signup' %}"> SignUp </a></li>
+
+            {% endif %}
+
           </ul>
         </div>
       </div>
@@ -75,11 +86,13 @@
 
     <footer class="bg-faded text-center py-5">
       <div class="container">
-        <p class="m-0">Copyright &copy; Your Website 2017</p>
+        <p class="m-0">Copyright &copy; harayauction.com 2018</p>
       </div>
     </footer>
 
     <!-- Bootstrap core JavaScript -->
+    <script src="{% static 'js/jquery.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
     <script src="{% static 'js/jquery.min.js' %}"></script>
     <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
 

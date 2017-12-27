@@ -1,7 +1,33 @@
 {% extends "base.html" %} {% block content %}
-<div class="bg-faded p-4 my-4">
-  <div class="text-center">
-    <h1> {{auction.title}}</h1> {{auction.seller}}{{auction.bids}}
-  </div>
-</div>
+{% load staticfiles %}
+<div class="container">
+
+      <div class="bg-faded p-4 my-4">
+        <hr class="divider">
+        <h2 class="text-center text-lg text-uppercase">{{auction.title}}
+        </h2>
+        <hr class="divider">
+        <div class="row">
+          <div class="col-lg-6">
+            {% if auction.picture %}
+            <img class="img-fluid mb-4 mb-lg-0" src="{{auction.picture.url}}" alt="">
+            {% else %}
+            <img class="img-fluid mb-4 mb-lg-0" src="{% static 'img/image_not_found.png'%}" alt="">
+            {% endif %}
+          </div>
+          <div class="col-lg-6">
+            <p>{{auction.description}}
+</p>
+<h3>
+<strong>Current Highest Bid: {{bid.amount}} KD</strong>
+</h3>
+<h3> Bidding closes at: {{auction.ending_at}} </h3>
+<a class="btn btn-primary" href="{% url 'create_bid' auction.pk %}">Bid</a>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+    <!-- /.container -->
 {% endblock %}

@@ -1,13 +1,69 @@
-{% extends "base.html" %}
-  {% block content %}
-  <div class="bg-faded p-4 my-4">
-    <div class="text-center">
-  <form method="post" action="{% url 'auction_create' %}">
-    {% csrf_token %}
-      {{ form.as_p }}
+{% extends "base.html" %} {% block media %} {{form.media}} {% endblock %} {% block content %}
+<style>
+  .file {
+    visibility: hidden;
+    position: absolute;
+  }
+</style>
 
-  <input class="btn btn-default btn-primary" type="submit" value="Done">
-</form>
+<div class="container">
+  <div class="bg-faded p-4 my-4 text-center">
+    <h2 class="text-center">
+        Create Auction
+      </h2>
+    <form method="post" action="{% url 'auction_create' %}">
+      {% csrf_token %}
+      <div class="row col-lg-12 ">
+        <div class="col-lg-7 " style="margin-bottom: 10px">
+          {{form.title.label}}: {{form.title}}
+        </div>
+        <div class="col-lg-5 text-right " style="margin-bottom: 10px">
+          <div class="form-group">
+            <input type="file" name="img[]" class="file">
+            <div class="input-group">
+              <span class="input-group-addon"><i class="glyphicon glyphicon-picture"></i></span>
+              <input type="text" class="form-control input-lg" disabled placeholder="Upload Image">
+              <span class="input-group-btn">
+       <button class="browse btn btn-primary input-lg" type="button"><i class="glyphicon glyphicon-search"></i> Browse</button>
+     </span>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 ">
+          {{form.starting_bid.label}}: {{form.starting_bid}}
+        </div>
+        <div class="col-md-2 text-right">
+          {{form.ending_at.label}}:
+        </div>
+        <div class="col-md-4 ">
+          {{form.ending_at}}
+        </div>
+        <div class="col-md-12 ">
+          <label for="comment">Description:</label>
+          <textarea class="form-control" rows="5" id="id_description" name='description'></textarea>
+        </div>
+        {{form.seller.as_hidden}}
+      </div>
+      {% if form.errors %}
+      <div class="alert alert-error">
+        <button type="button" class="close" data-dismiss="alert">×</button> {% for field in form %} {% if field.errors %}
+        <li>{{ field.label }}: {{ field.errors|striptags }}</li>
+        {% endif %} {% endfor %}
+      </div>
+      {% endif %}
+      <br>
+      <input class="btn btn-default btn-primary" type="submit" value="Done">
+    </form>
+  </div>
 </div>
 </div>
+<script>
+  $(document).on('click', '.browse', function() {
+    var file = $(this).parent().parent().parent().find('.file');
+    file.trigger('click');
+  });
+  $(document).on('change', '.file', function() {
+    $(this).parent().find('.form-control').val($(this).val().replace(/C:\\fakepath\\/i, ''));
+  });
+</script>
 {% endblock %}
