@@ -47,7 +47,6 @@ INSTALLED_APPS = [
     'users',
     'auctions',
     'datetimewidget',
-    'django_celery_beat',
 
 ]
 
@@ -149,8 +148,6 @@ ACCOUNT_CONFIRM_EMAIL_ON_GET = True
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = 'None'
 LOGIN_REDIRECT_URL = "/"
-MAX_ATTEMPTS=10
-BACKGROUND_TASK_RUN_ASYNC=True
 from django.contrib.messages import constants as message_constants
 
 MESSAGE_TAGS = {

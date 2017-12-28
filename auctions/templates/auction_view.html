@@ -19,7 +19,7 @@
             <p>{{auction.description}}
 </p>
 <h3>
-<strong>Current Highest Bid: {{bid.amount}} KD</strong>
+<strong>Current Highest Bid: {% if bid %}{{bid.amount}} {% else %} {{auction.starting_bid}} {% endif %} KD</strong>
 </h3>
 <h3> Bidding closes at: {{auction.ending_at}} </h3>
 <a class="btn btn-primary" href="{% url 'create_bid' auction.pk %}">Bid</a>

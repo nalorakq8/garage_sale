@@ -8,16 +8,11 @@ from .forms import NewAuction,NewBid
 from .models import Auction,Bid
 from django.core.urlresolvers import reverse
 from datetime import datetime
-from celery import Celery
-from celery.schedules import crontab
-
-app = Celery()
-# Create your views here.
 
 
 @login_required
 def auction_create(request):
-    if not request.user.user.seller:
+    if not hasattr(request.user.user,'seller'):
         raise Http404
     if request.method == 'POST':
         form = NewAuction(request.POST)
@@ -40,23 +35,34 @@ def auction_create(request):
 
 def auction_view(request,pk):
     qs = Auction.objects.get(pk=pk)
-    qs2 =Bid.objects.filter(auction=pk).order_by('-amount')[0]
+    bid =Bid.objects.filter(auction=pk).order_by('-amount')
+    if bid:
+        bid=bid[0]
+    else:
+        bid=None
     return render(
         request,
         'auction_view.html',
         {
             'auction': qs,
-            'bid': qs2,
+            'bid': bid,
         })
 @login_required
 def create_bid(request,pk):
     qs = Auction.objects.get(pk=pk)
-    bid=Bid.objects.filter(auction=pk).order_by('-amount')[0]
-    min_bid=bid.amount + 1
+    bid=Bid.objects.filter(auction=pk).order_by('-amount')
+    if bid:
+        bid=bid[0]
+        min_bid=bid.amount + 1
+    else:
+        bid=None
+        min_bid=qs.starting_bid + 1
+
     if request.user.user == qs.seller.user:
         messages.error(request, "You can't bid on your own auction")
         return redirect(reverse('auction_view', kwargs={
             'pk': pk,}))
+
     if request.method == 'POST':
         form = NewBid(request.POST)
         if form.is_valid():
@@ -66,10 +72,7 @@ def create_bid(request,pk):
                 'pk': pk,}))
     else:
 
-        form = NewBid(initial={'bidder': request.user.user.pk,
-                                    'auction':pk
-                                   })
-
+        form = NewBid(initial={'auction':[pk,],'bidder': request.user.user.pk})
     return render(
         request,
         'create_bid.html',
@@ -104,13 +107,6 @@ def view_latest_auctions_list(request):
 def delete_auction(request):
     return
 
-@app.task
 def send_emails(request):
     print('hi')
     return
-app.conf.beat_schedule = {
-    'add-every-30-seconds': {
-        'task': 'tasks.send_emails',
-        'schedule': 1.0,
-    },
-}
