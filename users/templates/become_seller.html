@@ -1,0 +1,40 @@
+{% extends "base.html" %} {% block media %} {{form.media}} {% endblock %} {% block content %}
+<div class="container">
+  <div class="bg-faded p-4 my-4 text-center">
+    <hr class='divider'>
+    <h2 class="text-center">
+        Become A Seller
+      </h2>
+      <hr class='divider'>
+    <form method="post" action="{% url 'become_seller' %}" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="row col-lg-12 ">
+
+        <div class="col-md-6 " style="margin-bottom: 10px">
+          {{form.card_number.label}}: {{form.card_number}}
+        </div>
+        <div class="col-md-6 " style="margin-bottom: 10px">
+          {{form.card_holder_name.label}}: {{form.card_holder_name}}
+        </div>
+        <div class="col-md-6 " style="margin-bottom: 10px">
+          {{form.cvv_number.label}}: {{form.cvv_number}}
+        </div>
+        <div class="col-md-6 " style="margin-bottom: 10px">
+          {{form.card_expiration_date.label}}: {{form.card_expiration_date}}
+        </div>
+        {{form.user.as_hidden}}
+      </div>
+      {% if form.errors %}
+      <div class="alert alert-error">
+        <button type="button" class="close" data-dismiss="alert">×</button> {% for field in form %} {% if field.errors %}
+        <li>{{ field.label }}: {{ field.errors|striptags }}</li>
+        {% endif %} {% endfor %}
+      </div>
+      {% endif %}
+      <br>
+      <input class="btn btn-default btn-primary" type="submit" value="Done">
+    </form>
+  </div>
+</div>
+</div>
+{% endblock %}

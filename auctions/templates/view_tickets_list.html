@@ -1,0 +1,21 @@
+{% extends "base.html" %} {% block content %} {% load staticfiles %}
+<div class="container">
+  <div class="row">
+    {% if tickets %} {% for ticket in tickets %}
+    <div class="bg-faded p-4 my-4 col-lg-12">
+      <h2 class="card-title text-shadow  text-uppercase mb-0">Subject: {{ticket.subject}}</h2>
+      <h4 class="text-shadow ">Name: {{ticket.name}}</h4>
+      <h4 class="text-shadow ">Submitted At: {{ticket.created_at}}</h4>
+      <h4 class="text-shadow ">Message:</h4>
+      <p class="lead card-text text-shadow  w-50 d-none d-lg-block">{{ticket.message}}</p>
+      <a href="{% url 'reply_ticket' ticket.pk %}" class="btn btn-primary">reply</a>
+    </div>
+
+    {% endfor %} {% else %}
+    <div class="bg-faded p-4 my-4">
+      <h2> All tickets has been replyed to :) </h2>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

@@ -12,6 +12,8 @@
     <title>Haray Auction </title>
 
     <!-- Bootstrap core CSS -->
+    {% block css %} {% endblock %}
+
     <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
 
     <!-- Custom fonts for this template -->
@@ -47,12 +49,16 @@
               <a class="nav-link text-uppercase text-expanded" href="{% url 'view_auctions_list' %}">Auctions</a>
             </li>
             {% if user.user.seller %}
-            <li class="nav-item px-lg-4"><a class="nav-link text-uppercase text-expanded" href="#"> My Auctions </a></li>
+            <li class="nav-item px-lg-4"><a class="nav-link text-uppercase text-expanded" href="{% url 'my_auctions' %}"> My Auctions </a></li>
             {% endif %}
-
+            {% if user.user.customersupport %}
+            <li class="nav-item px-lg-4"><a class="nav-link text-uppercase text-expanded" href="{% url 'view_tickets_list' %}"> Tickets </a></li>
+            {% endif%}
+            {% if not user.user.seller and user.is_authenticated %}
+            <li class="nav-item px-lg-4"><a class="nav-link text-uppercase text-expanded" href="{% url 'become_seller' %}"> Become A Seller </a></li>
+            {% endif %}
             {% if user.is_authenticated %}
-            <li class="nav-item px-lg-4"><a class="nav-link text-uppercase text-expanded" href="#"> Profile </a></li>
-
+            <li class="nav-item px-lg-4"><a class="nav-link text-uppercase text-expanded" href="{% url 'profile_view' user.user.pk %}"> Profile </a></li>
             <li class="nav-item px-lg-4">
               <a class="nav-link text-uppercase text-expanded" href="{% url 'account_logout' %}"> Sign Out </a>
             </li>
@@ -63,7 +69,9 @@
             <li class="nav-item px-lg-4"><a class="nav-link text-uppercase text-expanded" href="{% url 'account_signup' %}"> SignUp </a></li>
 
             {% endif %}
-
+            <li class="nav-item px-lg-4">
+              <a class="nav-link text-uppercase text-expanded" href="{% url 'contact_us' %}"> Contact us</a>
+            </li>
           </ul>
         </div>
       </div>

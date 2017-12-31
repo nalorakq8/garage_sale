@@ -23,5 +23,11 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^accounts/', include('allauth.urls',)),
     url(r'^auctions/', include('auctions.urls')),
+    url(r'^users/', include('users.urls')),
+    url(r'^contact_us/$',views.contact_us,name='contact_us'),
+    url(r'^tickets/$',views.view_tickets_list,name='view_tickets_list'),
+    url(r'^tickets/(?P<pk>\d+)$',views.reply_ticket,name='reply_ticket'),
+    url(r'^books/$',views.books,name='books'),
     url(r'^$',views.view_latest_auctions_list,name='home')
+
 ] + static(settings.MEDIA_URL,document_root = settings.MEDIA_ROOT)

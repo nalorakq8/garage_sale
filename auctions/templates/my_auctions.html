@@ -1,0 +1,38 @@
+{% extends "base.html" %} {% block content %} {% load staticfiles %}
+<div class="container">
+  <div class="bg-faded p-4 my-4 text-center">
+    <hr class="divider">
+      <h2 style="text-transform: capitalize;"> {{user.user.name}} Auctions </h2>
+      <hr class="divider">
+      <a class="btn btn-primary" href="{% url 'auction_create' %}">Create Auction</a>
+  </div>
+  <div class="clearfix"></div>
+{% if auctions %}
+{% for auction in auctions %}
+
+  <div class="bg-faded p-4 my-4 col-sm-12">
+    <div class="card card-inverse">
+      {% if auction.picture %}
+      <img class="card-img img-fluid w-100" src="{{auction.picture.url}}" alt="">
+      {% else %}
+      <img class="card-img img-fluid w-100" src="{% static 'img/image_not_found.png'%}" alt="">
+      {% endif %}
+      <div class="card-img-overlay bg-overlay">
+        <h2 class="card-title text-shadow text-white text-uppercase mb-0">{{auction.title}}</h2>
+        <h4 class="text-shadow text-white">Starting Bid: {{auction.starting_bid}} KD</h4>
+        <h4 class="text-shadow text-white">Bids closes at: {{auction.ending_at}}</h4>
+        <p class="lead card-text text-shadow text-white w-50 d-none d-lg-block">{{auction.description}}</p>
+        <a href="{% url 'auction_view' auction.pk %}" class="btn btn-primary">View Auction</a>
+      </div>
+    </div>
+  </div>
+
+{% endfor %}
+{% else %}
+<div class="bg-faded p-4 my-4 text-center">
+    <h2> You have no auctions :( </h2>
+    <a href="{% url 'auction_create'%}"> Click here to create auction </a>
+</div>
+{% endif %}
+</div>
+{% endblock %}

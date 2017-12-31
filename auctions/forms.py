@@ -1,7 +1,8 @@
 from django import forms
-from .models import Auction,Bid
+from .models import Auction,Bid, Payment, Ticket
 from datetimewidget.widgets import DateTimeWidget
-class NewAuction(forms.ModelForm):
+from datetime import datetime
+class NewAuctionForm(forms.ModelForm):
 
     class Meta:
         model = Auction
@@ -9,13 +10,14 @@ class NewAuction(forms.ModelForm):
         dateTimeOptions = {
             'format': 'dd/mm/yyyy HH:ii P',
             'autoclose': True,
-            'showMeridian': True}
+            'showMeridian': True,
+            'startDate': str(datetime.now().date())}
         widgets = {
             #'seller': forms.HiddenInput,
             'ending_at': DateTimeWidget(options=dateTimeOptions,
                                         usel10n=True, bootstrap_version=3),
         }
-class NewBid(forms.ModelForm):
+class NewBidForm(forms.ModelForm):
     class Meta:
         model = Bid
         fields='__all__'
@@ -23,3 +25,22 @@ class NewBid(forms.ModelForm):
             #'bidder': forms.HiddenInput,
             #'auction':forms.HiddenInput,
         }
+
+
+class EditAuctionForm(forms.ModelForm):
+    class Meta:
+        model = Auction
+        fields='__all__'
+        widgets ={
+        'description':forms.Textarea(),
+        }
+
+class PaymentForm(forms.ModelForm):
+    class Meta:
+        model = Payment
+        fields='__all__'
+
+class TicketForm(forms.ModelForm):
+    class Meta:
+        model = Ticket
+        fields='__all__'

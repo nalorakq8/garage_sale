@@ -1,5 +1,46 @@
 {% extends "base.html" %} {% block content %} {% load staticfiles %}
+<style>
+#imaginary_container{
+margin-top:5%; /* Don't copy this */
+}
+.stylish-input-group .input-group-addon{
+background: white !important;
+}
+.stylish-input-group .form-control{
+border-right:0;
+box-shadow:0 0 0;
+border-color:#ccc;
+}
+.stylish-input-group button{
+border:0;
+background:transparent;
+}
+.col-centered{
+float: none;
+margin: 0 auto;
+}
+</style>
 <div class="container">
+  <div class="row">
+        <div class="col-sm-12 col-sm-offset-3 col-centered">
+            <div id="imaginary_container">
+                <form class="input-group" role="search" method="get" action="{% url 'auction_search' %}">
+                  <div class="input-group-btn search-panel">
+                <select class="form-control" name="category" id="id_category">
+              <option value="">Category</option>
+                      <option value="Antiques">Antiques</option>
+                      <option value="Automobiles">Automobiles</option>
+                      <option value="Computers">Computers</option>
+                      <option value="Mobiles">Mobiles</option>
+                    </select>
+            </div>
+                    <input type="text" class="form-control"  placeholder="Search" name='search' >
+
+                </form>
+            </div>
+        </div>
+  </div>
+  {% if auctions %}
 {% for auction in auctions %}
 
   <div class="bg-faded p-4 my-4">
@@ -20,5 +61,10 @@
   </div>
 
 {% endfor %}
+{% else %}
+  <div class="bg-faded p-4 my-4">
+    <h2> Couldn't find matching auction </h2>
+  </div>
 </div>
+{% endif %}
 {% endblock %}

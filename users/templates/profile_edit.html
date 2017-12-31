@@ -1,0 +1,91 @@
+{% extends "base.html" %} {% block content %} {% load staticfiles %}
+<style>
+  .file {
+    visibility: hidden;
+    position: absolute;
+  }
+</style>
+
+<div class="container">
+  <div class="bg-faded p-4 my-4 text-center">
+    <hr class='divider'>
+    <h2 class="text-center">
+        Edit Profile
+      </h2>
+    <hr class='divider'>
+    <br>
+    <form method="post" action="{% url 'profile_edit' request.user.user.pk %} "enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="row col-lg-12 ">
+        <div class="col-lg-7 " style="margin-bottom: 10px">
+          {{form_user.name.label}}: {{form_user.name}}
+        </div>
+        <div class="col-lg-5 text-right " style="margin-bottom: 10px">
+          <div class="form-group">
+            <input type="file" name="picture" class="file">
+            <div class="input-group">
+              <span class="input-group-addon"><i class="glyphicon glyphicon-picture"></i></span>
+              <input type="text" class="form-control input-lg" disabled placeholder="Upload Image">
+              <span class="input-group-btn"><button class="browse btn btn-primary input-lg" type="button"><i class="glyphicon glyphicon-search"></i> Browse</button></span>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 " style="margin-bottom: 10px">
+          {{form_user.phone_number.label}}: {{form_user.phone_number}}
+        </div>
+        <div class="col-md-6 " style="margin-bottom: 10px">
+          {{form_user.address.label}}: {{form_user.address}}
+        </div>
+        <div class="col-md-6 " style="margin-bottom: 10px">
+          {{form_user.email.label}}: {{form_user.email}}
+        </div>
+        {% if form_seller %}
+        <div class="col-md-6 " style="margin-bottom: 10px">
+          {{form_seller.card_holder_name.label}}: {{form_seller.card_holder_name}}
+        </div>
+        <div class="col-md-6 " style="margin-bottom: 10px">
+          {{form_seller.card_number.label}}: {{form_seller.card_number}}
+        </div>
+        <div class="col-md-6 " style="margin-bottom: 10px">
+          {{form_seller.cvv_number.label}}: {{form_seller.cvv_number}}
+        </div>
+        <div class="col-md-6 " style="margin-bottom: 10px">
+          {{form_seller.card_expiration_date.label}}: {{form_seller.card_expiration_date}}
+        </div>
+        {{form_seller.user.as_hidden}}
+        {% endif %}
+        {{form_user.user.as_hidden}}
+        {{form.seller.as_hidden}}
+      </div>
+      {% if form_user.errors %}
+      <div class="alert alert-error">
+        <button type="button" class="close" data-dismiss="alert">×</button> {% for field in form_user %} {% if field.errors %}
+        <li>{{ field.label }}: {{ field.errors|striptags }}</li>
+        {% endif %} {% endfor %}
+      </div>
+      {% endif %}
+      {% if form_seller.errors %}
+      <div class="alert alert-error">
+        <button type="button" class="close" data-dismiss="alert">×</button> {% for field in form_seller %} {% if field.errors %}
+        <li>{{ field.label }}: {{ field.errors|striptags }}</li>
+        {% endif %} {% endfor %}
+      </div>
+      {% endif %}
+      <br>
+      <input class="btn btn-default btn-primary" type="submit" value="Done">
+    </form>
+  </div>
+</div>
+</div>
+<script>
+  $(document).on('click', '.browse', function() {
+    var file = $(this).parent().parent().parent().find('.file');
+    file.trigger('click');
+  });
+  $(document).on('change', '.file', function() {
+    $(this).parent().find('.form-control').val($(this).val().replace(/C:\\fakepath\\/i, ''));
+  });
+</script>
+
+<!-- /.container -->
+{% endblock %}

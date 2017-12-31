@@ -1,0 +1,20 @@
+{% extends "base.html" %} {% block content %} {% load staticfiles %}
+<div class="container">
+  <div class="row">
+    <div class="bg-faded p-4 my-4 col-lg-12">
+      <h2 class="card-title text-shadow  text-uppercase mb-0">Subject: {{ticket.subject}}</h2>
+      <h4 class="text-shadow ">Name: {{ticket.name}}</h4>
+      <h4 class="text-shadow ">Submitted At: {{ticket.created_at}}</h4>
+      <h4 class="text-shadow ">Message:</h4>
+      <p class="lead card-text text-shadow  w-50 d-none d-lg-block">{{ticket.message}}</p>
+      <form method="post" action="{% url 'reply_ticket' ticket.pk %}" enctype="multipart/form-data">
+        {% csrf_token %}
+      <div class="form-group col-lg-12">
+        <label class="text-heading">Message</label>
+        <textarea class="form-control" rows="6" name='message'></textarea>
+      </div>
+      <input class="btn btn-default btn-primary" type="submit" value="Send">
+    </div>
+  </div>
+</div>
+{% endblock %}

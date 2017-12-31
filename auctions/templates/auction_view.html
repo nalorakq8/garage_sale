@@ -22,12 +22,34 @@
 <strong>Current Highest Bid: {% if bid %}{{bid.amount}} {% else %} {{auction.starting_bid}} {% endif %} KD</strong>
 </h3>
 <h3> Bidding closes at: {{auction.ending_at}} </h3>
-<a class="btn btn-primary" href="{% url 'create_bid' auction.pk %}">Bid</a>
+<a class="btn btn-primary" href="{% url 'create_bid' auction.pk %}">Bid</a> {% if user.user == auction.seller.user %}<a class="btn btn-primary float-right" href="{% url 'auction_edit' auction.pk %}">Edit</a>{% endif %}
           </div>
         </div>
       </div>
+      <div class="bg-faded p-4 my-4">
 
-
+        <h2 class="text-left text-lg text-uppercase">Similar Auctions:</h2>
+        <div class="row text-center">
+          {% for auction in recomendations %}
+        <div class="col-lg-3 col-md-6">
+          <div class="card">
+            {% if auction.picture %}
+            <img class="card-img-top" src="{{auction.picture.url}}" alt="">
+            {% else %}
+            <img class="card-img-top" src="{% static 'img/image_not_found.png'%}" alt="">
+            {% endif %}
+            <div class="card-body">
+              <h4 class="card-title">{{auction.title}}</h4>
+              <p class="card-text">{{auction.description|truncatewords:10}}</p>
+            </div>
+            <div class="card-footer">
+              <a href="{% url 'auction_view' auction.pk %}" class="btn btn-primary">View Auction</a>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+    </div>
+    </div>
     </div>
     <!-- /.container -->
 {% endblock %}

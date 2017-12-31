@@ -1,0 +1,21 @@
+{% extends "base.html" %} {% block content %} {% load staticfiles %}
+<div class="container">
+  <div class="bg-faded p-4 my-4 text-center">
+    <h2 class="text-center"> Payment for {{auction.title}} </h2>
+      <form method="post" action="{% url 'payment' auction.pk%}">
+        {% csrf_token %}
+{{form.payment_method.label}}: {{form.payment_method}}
+{{form.bid.as_hidden}}
+<h2> Amount: {{highest_bid.amount}}KD</h2>
+{% if form.errors %}
+<div class="alert alert-error">
+  <button type="button" class="close" data-dismiss="alert">×</button> {% for field in form %} {% if field.errors %}
+  <li>{{ field.label }}: {{ field.errors|striptags }}</li>
+  {% endif %} {% endfor %}
+</div>
+{% endif %}
+<br>
+<input class="btn btn-default btn-primary" type="submit" value="Pay">
+</div>
+</div>
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends "base.html" %} {% block content %}
+{% load staticfiles %}
+<div class="bg-faded p-4 my-4">
+        <hr class="divider">
+        <h2 class="text-center text-lg text-uppercase my-0">Contact
+          <strong>Form</strong>
+        </h2>
+        <hr class="divider">
+
+        <form method="post" action="{% url 'contact_us' %}" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="row">
+            {% if user.is_authenticated == False%}
+            <div class="form-group col-lg-4">
+              <label class="text-heading">Name</label>
+              <input type="text" class="form-control" name='name'>
+            </div>
+            <div class="form-group col-lg-4">
+              <label class="text-heading">Email Address</label>
+              <input type="email" class="form-control" name='email'>
+            </div>
+            <div class="form-group col-lg-4">
+              <label class="text-heading">Phone Number</label>
+              <input type="tel" class="form-control" name='phone_number'>
+            </div>
+            {% endif %}
+            <div class="clearfix"></div>
+            <div class="form-group col-lg-12">
+              <label class="text-heading">Subject</label>
+              <input type="tel" class="form-control" name='subject'>
+            </div>
+            <div class="clearfix"></div>
+            <div class="form-group col-lg-12">
+              <label class="text-heading">Message</label>
+              <textarea class="form-control" rows="6" name='message'></textarea>
+            </div>
+            {{form.user.as_hidden}}
+            {{form.name.as_hidden}}
+            {{form.email.as_hidden}}
+            {{form.phone_number.as_hidden}}
+            {% if form.errors or form.non_field_errors %}
+            <div class="alert alert-error col-lg-12 text-center">
+              <button type="button" class="close" data-dismiss="alert">×</button> {% for field in form %} {% if field.errors %}
+              <li>{{ field.label }}: {{ field.errors|striptags }}</li>
+              {% endif %} {% endfor %} {{ form.non_field_errors }}
+            </div>
+            {% endif %}
+
+            <br>
+            <div class="form-group col-lg-12">
+              <button type="submit" class="btn btn-secondary">Submit</button>
+            </div>
+          </div>
+        </form>
+      </div>
+{% endblock %}

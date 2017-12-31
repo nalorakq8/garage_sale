@@ -1,0 +1,57 @@
+{% extends "base.html"%} {% block content %} {% load staticfiles%}
+{% block css%} <link href="{% static 'css/bootstrap0.css' %}" rel="stylesheet"> {% endblock %}
+<style>
+  hr.divider{
+    border-color: #292b2c;
+    max-width: 100%;
+}
+</style>
+<div class="container">
+    <div class="row">
+
+        <div class="col-sm-12">
+            <div class="bg-faded p-4 my-4">
+                <hr>
+                <h1 class="intro-text text-center">{{profile_user.name}}
+
+              </h1>
+                <hr>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12">
+          <div class="bg-faded p-4 my-4">
+                <div class="col-sm-4 text-center">
+                    {% if profile_user.picture %}
+                    <img class="img-circle img-responsive" src="{{profile_user.picture.url}}" alt="" height="450" width="750"> {% else %}
+                    <img class="img-circle img-responsive" src="{% static 'img/default-profile-picture.png'%}" alt="" height="450" width="750"> {% endif %}
+                </div>
+                <div class="col-sm-8 text-left">
+                    <br>
+                    <br>
+                    <br>
+                    <hr class="divider">
+                    <p><i class="fa fa-envelope-o" aria-hidden="true"></i> Email: {{profile_user.email}}</p>
+                    <p><i class="fa fa-envelope-o" aria-hidden="true"></i> Address: {{profile_user.address}}</p>
+                    <p><i class="fa fa-envelope-o" aria-hidden="true"></i> Phone Number: {{profile_user.phone_number}} </p>
+
+                    {% if profile_seller and profile_seller.pk == user.user.seller.pk %}
+                    <p><i class="fa fa-envelope-o" aria-hidden="true"></i> Card Holder Name: {{profile_seller.card_holder_name}}</p>
+                    <p><i class="fa fa-envelope-o" aria-hidden="true"></i> Card Number: {{profile_seller.card_number}}</p>
+                    <p><i class="fa fa-envelope-o" aria-hidden="true"></i> CVV: {{profile_seller.cvv_number}}</p>
+                    <p><i class="fa fa-envelope-o" aria-hidden="true"></i> Card Expiration Date: {{profile_seller.card_expiration_date}}</p>
+                    {% endif %}
+                    {% if user.user == profile_user %}
+                    <a class="btn btn-primary float-right" href="{% url 'profile_edit' request.user.user.pk %}">Edit Profile<span class="glyphicon glyphicon-chevron-right"></span></a>
+                    {% endif %}
+                    <br>
+                    <hr class="divider">
+                </div>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
