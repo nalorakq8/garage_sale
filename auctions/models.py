@@ -19,9 +19,9 @@ class Auction(models.Model):
                   ("Antiques", "Antiques"))
     title = models.CharField(max_length=240)
     seller = models.ForeignKey(Seller, blank=True, null=True)
-    starting_bid = models.DecimalField(max_digits=10, decimal_places=2)
+    starting_bid = models.DecimalField(max_digits=10, decimal_places=3)
     created_at = models.DateTimeField(auto_now_add=True)
-    ending_at = models.DateTimeField()
+    ending_at = models.DateTimeField(blank=False,null=False)
     description = models.CharField(
         max_length=1200, null=False, blank=False, default="")
     picture = models.FileField(null=True, blank=True)

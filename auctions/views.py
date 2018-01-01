@@ -11,6 +11,7 @@ from datetime import datetime
 from django.db.models import Q
 from django.core.mail import EmailMessage
 from django.utils import timezone
+from django.core.exceptions import ValidationError
 
 
 def send_emails():
@@ -39,7 +40,7 @@ http://127.0.0.1:8000{}""".format(highest_bid.bidder.name, auction.title, revers
 @login_required
 def payment(request, pk):
     auction = get_object_or_404(Auction, pk=pk)
-    highest_bid = Bid.objects.filter(auction=auction.pk).order_by('-amount')[:0]
+    highest_bid = Bid.objects.filter(auction=auction.pk).order_by('-amount')[0]
     if auction.payed == False and auction.ending_at < timezone.now() and highest_bid.bidder.pk == request.user.user.pk:
         highest_bid = Bid.objects.filter(
             auction=auction.pk).order_by('-amount')[0]
@@ -51,7 +52,7 @@ def payment(request, pk):
                 email = EmailMessage(
                     'Payment confirmation for {} auction'.format(
                         auction.title),
-                    """Hello {}, Your payment has been recivied for {} auction, Amount{}KD""".format(highest_bid.bidder.name, auction.title, highest_bid.amount), to=[highest_bid.bidder.email])
+                    """Hello {}, Your payment has been recivied for {} auction, Amount {}KD""".format(highest_bid.bidder.name, auction.title, highest_bid.amount), to=[highest_bid.bidder.email])
                 email.send()
                 email = EmailMessage(
                     'Payment for {}'.format(auction.title),
@@ -323,25 +324,36 @@ def reply_ticket(request,pk):
         )
     else:
         raise Http404
+@login_required
 def books(request):
-    auctions = get_list_or_404(Auction,payed=True)
-    payments = get_list_or_404(Payment)
-    profit = 0.0
-    number_of_auctions = 0
-    data = []
-    for auction in auctions:
-        number_of_auctions += 1
-    for payment in payments:
-        profit = profit + (float(payment.bid.amount) * 0.03)
-        data.append({
-        'payed_at': str(payment.payed_at.date()),
-        'profit': float(payment.bid.amount) * 0.03
+    if hasattr(request.user.user, 'accountant'):
+        if Auction.objects.filter(payed = True):
+            auctions = get_list_or_404(Auction,payed=True)
+            payments = get_list_or_404(Payment)
+            profit = 0.0
+            number_of_auctions = 0
+            data = {"January":0, "February":0, "March":0, "April":0, "May":0, "June":0, "July":0,"August":0, "September":0,"October":0,"November":0,"December":0}
+            data_list = []
+            for auction in auctions:
+                number_of_auctions += 1
+            for payment in payments:
+                profit = profit + round((float(payment.bid.amount) * 0.1),2)
+                print(payment.payed_at.date())
+                data[payment.payed_at.date().strftime('%B')]+=round((float(payment.bid.amount) * 0.1),2)
+            for key,value in data.items():
+                data_list.append(value)
+        else:
+            auctions = None
+            profit=None
+            number_of_auctions = None
+            data_list = [0,0,0,0,0,0,0,0,0,0,0,0]
+        return render(request,
+        'books.html',
+        {
+            "auctions": auctions,
+            "profit": profit,
+            "number_of_auctions": number_of_auctions,
+            'data': data_list
         })
-    return render(request,
-    'books.html',
-    {
-        "auctions": auctions,
-        "profit": profit,
-        "number_of_auctions": number_of_auctions,
-        'data': data
-    })
+    else:
+        raise Http404
