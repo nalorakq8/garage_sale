@@ -87,7 +87,8 @@ class Bid(models.Model):
 
 class Payment(models.Model):
     METHODS = (('Paypal','Paypal'),
-                ('Credit/Debit Card','Credit/Debit Card'))
+                ('Credit/Debit Card','Credit/Debit Card'),
+                ('Knet','Knet'))
     bid = models.OneToOneField(Bid)
     payment_method = models.CharField(
         "method", null=False, choices=sorted(METHODS), max_length=64)
