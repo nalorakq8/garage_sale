@@ -13,7 +13,7 @@ from django.core.mail import EmailMessage
 from django.utils import timezone
 from django.core.exceptions import ValidationError
 import pandas as pd
-
+from django.conf import settings
 def send_emails():
     auctions = Auction.objects.filter(
         Q(ending_at__lte=datetime.now()) & Q(email_sent=False))
@@ -338,7 +338,6 @@ def books(request):
                 number_of_auctions += 1
             for payment in payments:
                 profit = profit + round((float(payment.bid.amount) * 0.1),2)
-                print(payment.payed_at.date())
                 data[payment.payed_at.date().strftime('%B')]+=round((float(payment.bid.amount) * 0.1),2)
             for key,value in data.items():
                 data_list.append(value)
@@ -370,12 +369,11 @@ def export_books(request):
                 number_of_auctions += 1
             users_list = [
        {
-            "seller_name":payment.bid.auction.seller.name,
             "highest_bidder_name":payment.bid.bidder.name,
             "selling_price":payment.bid.amount,
             "payed_at":payment.payed_at,
         }  for payment in payments
         ]
         df = df.append(pd.DataFrame(users_list),ignore_index=True)
-        df.to_csv('books.csv',encoding='utf-8',index=False)
-        return redirect(reverse('/media/books.csv'))
+        df.to_csv(settings.PROJECT_DIR +'\\media\\books.csv',encoding='utf-8',index=False)
+        return redirect('/media/books.csv')
