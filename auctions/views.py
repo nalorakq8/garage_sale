@@ -12,7 +12,7 @@ from django.db.models import Q
 from django.core.mail import EmailMessage
 from django.utils import timezone
 from django.core.exceptions import ValidationError
-
+import pandas as pd
 
 def send_emails():
     auctions = Auction.objects.filter(
@@ -357,3 +357,25 @@ def books(request):
         })
     else:
         raise Http404
+@login_required
+def export_books(request):
+    df = pd.DataFrame()
+    if hasattr(request.user.user, 'accountant'):
+        if Auction.objects.filter(payed = True):
+            auctions = get_list_or_404(Auction,payed=True)
+            payments = get_list_or_404(Payment)
+            profit = 0.0
+            number_of_auctions = 0
+            for auction in auctions:
+                number_of_auctions += 1
+            users_list = [
+       {
+            "seller_name":payment.bid.auction.seller.name,
+            "highest_bidder_name":payment.bid.bidder.name,
+            "selling_price":payment.bid.amount,
+            "payed_at":payment.payed_at,
+        }  for payment in payments
+        ]
+        df = df.append(pd.DataFrame(users_list),ignore_index=True)
+        df.to_csv('books.csv',encoding='utf-8',index=False)
+        return redirect(reverse('/media/books.csv'))

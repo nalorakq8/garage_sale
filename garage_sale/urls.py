@@ -28,6 +28,7 @@ urlpatterns = [
     url(r'^tickets/$',views.view_tickets_list,name='view_tickets_list'),
     url(r'^tickets/(?P<pk>\d+)$',views.reply_ticket,name='reply_ticket'),
     url(r'^books/$',views.books,name='books'),
+    url(r'^term_of_use/$',TemplateView.as_view(template_name='term_of_use.html')),
     url(r'^$',views.view_latest_auctions_list,name='home')
 
 ] + static(settings.MEDIA_URL,document_root = settings.MEDIA_ROOT)

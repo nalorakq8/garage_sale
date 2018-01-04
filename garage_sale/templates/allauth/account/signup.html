@@ -17,6 +17,7 @@
   {% if redirect_field_value %}
   <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
   {% endif %}
+  <p> By signing up you are agreeing on the <a href="http://127.0.0.1:8000/term_of_use/">terms of use</a></p>
   <button class ='btn btn-outline-primary'type="submit">{% trans "Sign Up" %} &raquo;</button>
 </form>
 </div>
